@@ -1,0 +1,40 @@
+Make the following upgrades to Paperset. Implement all of them carefully and test each one.
+1. LANDING PAGE
+Before the onboarding flow, add a proper landing page that shows when someone visits for the first time (not logged in). It should look like a real professional website with:
+
+A top navigation bar with the Paperset logo on the left and "Log in" + "Sign up" buttons on the top right, styled cleanly
+A hero section with a strong headline (something like "Turn your notes into a real exam — instantly"), a short subheading explaining what Paperset does, and a prominent "Get started free" CTA button
+A features section with 3–4 key features laid out in a grid (e.g. "Any subject", "Instant grading", "Tracks your progress", "AI-powered feedback")
+A "How it works" section with 3 steps (Paste your notes → Generate your exam → Get graded instantly)
+A footer with the Paperset name and a short tagline
+The design must match the existing app aesthetic — Instrument Serif for headings, Geist for body, forest green and gold accent colours, clean and professional. No generic bootstrap look.
+
+2. REAL AUTHENTICATION
+Implement proper user authentication using Supabase (free tier, supports email/password and Google OAuth).
+
+Set up Supabase auth with email/password sign up and log in
+Add "Continue with Google" as a login option
+When signed up, store the user's name, curriculum, and year in a Supabase profiles table linked to their user ID
+Store exam history in a Supabase exams table (user_id, topic, score_pct, total_questions, correct_answers, timestamp) instead of localStorage
+When logged in, show the user's name and a logout button in the top right of the dashboard topbar
+If someone is already logged in when they visit, skip the landing page and go straight to their dashboard
+Protect the dashboard — if not logged in, redirect to the landing page
+The onboarding questions (curriculum, year) should appear once after first sign-up, then save to their profile
+
+3. EXIT EXAM
+Add an "Exit exam" button in the exam screen topbar. When clicked, show a confirmation dialog ("Are you sure you want to exit? Your progress will be lost."). If confirmed, return the user to the dashboard without saving any results.
+4. DELETE HISTORY
+In the dashboard sidebar history list, add a small delete icon (✕) next to each past exam entry. When clicked, show a confirmation ("Delete this exam from your history?"). If confirmed, delete that record from the Supabase exams table and refresh the history list. Also add a "Clear all history" button at the bottom of the history section that deletes all exams for that user after confirmation.
+5. CUSTOM QUESTION COUNT
+Replace the question count dropdown (5/10/15/20) with a number input field. Allow any number between 1 and 30. Default to 10. Validate that the input is a whole number between 1 and 30 — if not, show an inline error and don't allow generation to proceed.
+6. AI TUTOR CHAT (per question)
+After a user gets a question wrong or partially correct, show a small chat interface below the feedback box. It should have:
+
+A text input with placeholder "Ask why you got this wrong, or ask for a deeper explanation…"
+A send button
+A chat history area above the input showing the conversation
+When the user sends a message, call the backend which calls Groq with full context: the original question, the correct answer, the student's answer, and the conversation history so far
+The AI should respond as a patient, knowledgeable tutor — explaining concepts clearly, giving examples, and asking follow-up questions to check understanding
+The chat should support multiple back-and-forth messages, not just one response
+Style it cleanly — distinct bubbles for user and AI, subtle background, fits within the existing design
+Only show the chat interface after a wrong or partial answer, not after correct ones
